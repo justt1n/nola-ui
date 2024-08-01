@@ -1,13 +1,9 @@
 <template>
   <div id="app">
     <div class="title">
-      <h1
-        class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4md md:text-4md p-6"
-      >
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4md md:text-4md p-6">
         <span class="block">
-          <span
-            class="text-transparent bg-clip-text bg-gradient-to-tr to-cyan-500 from-green-600"
-          >
+          <span class="text-transparent bg-clip-text bg-gradient-to-tr to-cyan-500 from-green-600">
             Product Payment
           </span>
           tool
@@ -20,70 +16,34 @@
           <!-- Src sheet -->
           <div class="src_scheet w-1/2">
             <div>
-              <label
-                for="srcSheet"
-                class="input input-bordered flex items-center gap-2"
-                >Source Sheet:
-                <input
-                  v-model="srcSheet"
-                  id="srcSheet"
-                  type="text"
-                  @input="onSrcSheetInput"
-                  class="grow"
-                />
+              <label for="srcSheet" class="input input-bordered flex items-center gap-2">Source Sheet:
+                <input v-model="srcSheet" id="srcSheet" type="text" @input="onSrcSheetInput" class="grow" />
                 <span class="badge badge-info">Product Url</span>
               </label>
             </div>
             <div class="form-control">
               <h2 class="text-xl font-bold dark:text-white p-2">Product Sheet Data</h2>
-              <label
-                v-for="(item, index) in srcSheetData"
-                :key="index"
-                class="cursor-pointer label w-48"
-              >
+              <label v-for="(item, index) in srcSheetData" :key="index" class="cursor-pointer label w-48">
                 <span class="label-text" :for="'src' + index">{{ item }}</span>
-                <input
-                  type="checkbox"
-                  :id="'src' + index"
-                  v-model="selectedSrcData"
-                  :value="item"
-                  class="checkbox checkbox-success"
-                />
+                <input type="checkbox" :id="'src' + index" v-model="selectedSrcData" :value="item"
+                  class="checkbox checkbox-success" />
               </label>
             </div>
           </div>
           <!-- Des sheet -->
           <div class="des_sheet w-1/2">
             <div>
-              <label
-                for="srcSheet"
-                class="input input-bordered flex items-center gap-2"
-                >Payment Sheet:
-                <input
-                  v-model="desSheet"
-                  id="desSheet"
-                  type="text"
-                  @input="onDesSheetInput"
-                  class="grow"
-                />
+              <label for="srcSheet" class="input input-bordered flex items-center gap-2">Payment Sheet:
+                <input v-model="desSheet" id="desSheet" type="text" @input="onDesSheetInput" class="grow" />
                 <span class="badge badge-info">Payment Url</span>
               </label>
             </div>
             <div class="form-control">
               <h2 class="text-xl font-bold dark:text-white p-2">Payment Sheet Data</h2>
-              <label
-                v-for="(item, index) in desSheetData"
-                :key="index"
-                class="cursor-pointer label w-48"
-              >
+              <label v-for="(item, index) in desSheetData" :key="index" class="cursor-pointer label w-48">
                 <span class="label-text" :for="'src' + index">{{ item }}</span>
-                <input
-                  type="checkbox"
-                  :id="'src' + index"
-                  v-model="selectedDesData"
-                  :value="item"
-                  class="checkbox checkbox-success"
-                />
+                <input type="checkbox" :id="'src' + index" v-model="selectedDesData" :value="item"
+                  class="checkbox checkbox-success" />
               </label>
             </div>
           </div>
@@ -184,10 +144,10 @@ export default {
         src_sheet_url: src_spreadsheet_id,
         des_sheet_url: des_spreadsheet_id,
         src_sheet_names: this.selectedSrcData,
-        des_sheet_name: this.selectedDesData,
+        des_sheet_name: this.selectedDesData[0],
       };
       console.log("Data to filter:", JSON.stringify(data));
-      return JSON.stringify(data);      
+      return JSON.stringify(data);
     },
     buildDataToProcess() {
       console.log("Building data to process");
@@ -203,12 +163,12 @@ export default {
         return;
       }
 
-    //build data to process
-    var data = {
-      "src_sheet_url": src_spreadsheet_id,
-      "des_sheet_url": des_spreadsheet_id,
-      "des_sheet_names": this.selectedDesData
-    };
+      //build data to process
+      var data = {
+        src_sheet_url: src_spreadsheet_id,
+        des_sheet_url: des_spreadsheet_id,
+        des_sheet_names: this.selectedDesData
+      };
       console.log("Build data to process. Data: ", JSON.stringify(data));
       return JSON.stringify(data);
     },
@@ -220,8 +180,12 @@ export default {
       try {
         const response = await axios.post(
           "http://127.0.0.1:8000/api/core/testMultiSheet",
-          data);
-          console.log("Response:", response);
+          data, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log("Response:", response);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -232,7 +196,11 @@ export default {
       try {
         const response = await axios.post(
           "http://127.0.0.1:8000/api/core/testMultiSheet2",
-          data);
+          data, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
         console.log("Response:", response);
       } catch (error) {
         console.error("Error:", error);
